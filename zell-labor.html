@@ -1,0 +1,996 @@
+<!doctype html>
+<html lang="de-AT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Zell-Labor 5. Klasse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: Laborjournal – schmale Lernspalte, oben Modul-Reiter, jedes Modul in drei Schritten (Verstehen → Ausprobieren → Üben). Farben aus der Färbetechnik: Methylenblau, Eosin, Chlorophyll. */
+:root{
+  color-scheme:light;
+  --bg:#F6FAFB; --surface:#FFFFFF; --surface-2:#EAF3F6; --ink:#1F3442; --muted:#5B6F7A; --line:#D6E3E8;
+  --act:#2F6FDB; --act-ink:#FFFFFF;
+  --blue:#2F6FDB; --blue-soft:#E4EEFF; --pink:#D2437A; --pink-soft:#FDE9F1; --green:#2C9457; --green-soft:#E3F5E9; --amber:#B07A00; --amber-soft:#FFF4D6;
+  --d-stroke:#4A5C66; --cyto:#FFF8E3; --nuc:#D4E2FB; --nucleolus:#5F80CC; --mito:#FFD0BD; --er:#8A9BDB; --golgi:#E09A3E; --lyso:#F4C2D6;
+  --chloro:#A8DFA8; --grana:#2E7A3D; --vac:#DCF3F8; --wall:#B3CC6B; --capsule:#F2F7EA; --metal:#E1E9EC; --metal-dark:#9FB2BA;
+  --hero:linear-gradient(120deg,#E3EEFF 0%,#FDEBF2 55%,#E5F6EC 100%);
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55}
+.wrap{max-width:1000px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);line-height:1.15;text-wrap:balance;margin:0}
+h2{font-size:clamp(1.6rem,4vw,2.3rem);font-weight:800;letter-spacing:-.01em}
+h3{font-size:1.25rem;font-weight:700}
+p{margin:0}
+a{color:var(--blue)}
+.mono{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+
+/* Header */
+.top{padding-block:26px 18px;background:var(--hero)}
+.brand{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 20px}
+.brand h1{font-size:clamp(2rem,6vw,2.9rem);font-weight:800;letter-spacing:-.02em}
+.brand h1 span{color:var(--pink)} .brand h1{color:var(--ink)}
+.brand .sub{color:var(--muted)}
+.progress-line{display:flex;align-items:center;gap:10px;margin-top:10px;color:var(--muted);font-size:.9rem}
+.bar{flex:1;height:10px;border-radius:99px;background:#FFFFFFB3;overflow:hidden;max-width:320px}
+.bar i{display:block;height:100%;background:var(--green);width:0;transition:width .4s}
+
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);box-shadow:0 2px 10px #1F344214;border-bottom:1px solid var(--line)}
+.tabrow{display:flex;gap:4px;overflow-x:auto;padding-block:8px;scrollbar-width:thin}
+.tab{flex:0 0 auto;border:1px solid transparent;background:none;padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:7px}
+.tab:hover{color:var(--ink);background:var(--surface-2)}
+.tab[aria-current="true"]{color:var(--act);background:var(--blue-soft);border-color:var(--act)}
+.tab .dot{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.tab .dot.half{background:var(--amber)} .tab .dot.full{background:var(--green)}
+
+main{padding-block:26px 60px}
+section.mod{display:grid;gap:28px}
+.lead{font-size:1.1rem;max-width:66ch;color:var(--muted)}
+.step{display:grid;gap:14px}
+.step-h{display:flex;align-items:center;gap:12px}
+.step-h .num{font-family:var(--f-display);font-weight:800;font-size:1rem;background:var(--act);color:var(--act-ink);border-radius:50%;width:32px;height:32px;display:grid;place-items:center}
+.prose{display:grid;gap:12px;max-width:68ch}
+.prose ul{margin:0;padding-left:1.2em;display:grid;gap:4px}
+.goals{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 18px;display:grid;gap:6px}
+.goals ul{margin:0;padding-left:1.2em}
+.merke{border-left:5px solid var(--pink);background:var(--pink-soft);padding:12px 16px;border-radius:0 12px 12px 0;max-width:68ch}
+.merke b:first-child{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--pink);display:block;margin-bottom:4px}
+.tipp{border-left:5px solid var(--blue);background:var(--blue-soft);padding:12px 16px;border-radius:0 12px 12px 0;max-width:68ch}
+.tipp b:first-child{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:4px}
+.more{font-size:.92rem;color:var(--muted)}
+.more a{margin-right:12px;white-space:nowrap}
+
+/* Start */
+.hero{display:grid;gap:14px;max-width:70ch}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.mcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:0 4px 14px #1F34420D;padding:16px;display:grid;gap:8px;cursor:pointer;text-align:left}
+.mcard:hover{border-color:var(--act);transform:translateY(-2px)} .mcard{transition:transform .15s,border-color .15s}
+.mcard .mono{color:var(--muted)}
+.mcard h3{font-size:1.15rem}
+.mcard p{color:var(--muted);font-size:.95rem}
+.mcard .st{font-size:.85rem;font-weight:700}
+.howto{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.howto div{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--act);border-radius:14px;padding:12px 14px;padding-top:10px;display:grid;gap:4px}
+.howto b{font-family:var(--f-display);font-size:1.05rem}
+
+/* Lab panels */
+.lab{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:760px){.lab{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:0 4px 14px #1F34420D;padding:14px}
+.panel svg{width:100%;height:auto;display:block}
+.info{display:grid;gap:8px;align-content:start;min-height:150px}
+.info h3{color:var(--blue)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:5px 11px;cursor:pointer;font-size:.9rem}
+.chip:hover{border-color:var(--blue)}
+.chip[aria-pressed="true"]{background:var(--act);color:var(--act-ink);border-color:var(--act)}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:.7rem;padding:2px 7px;border-radius:6px;background:var(--surface-2);margin-right:4px}
+.tag.y{background:var(--green-soft);color:var(--green)} .tag.n{background:var(--pink-soft);color:var(--pink)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:none;padding:8px 14px;cursor:pointer;font-weight:700;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--act);color:var(--act-ink)}
+.btn{border:1px solid var(--act);background:var(--act);color:var(--act-ink);border-radius:10px;padding:8px 14px;cursor:pointer;font-weight:700}
+.btn.ghost{background:none;color:var(--ink);border-color:var(--line)}
+.btn:disabled{opacity:.45;cursor:default}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+
+/* SVG diagram styles */
+.cyto{fill:var(--cyto)}
+.membrane{fill:none;stroke:var(--d-stroke);stroke-width:4}
+.nuc{fill:var(--nuc);stroke:var(--d-stroke);stroke-width:2}
+.nucleolus{fill:var(--nucleolus)}
+.mito{fill:var(--mito);stroke:var(--d-stroke);stroke-width:1.5}
+.cristae{fill:none;stroke:var(--d-stroke);stroke-width:1.2}
+.er{fill:none;stroke:var(--er);stroke-width:3.5;stroke-linecap:round}
+.golgi{fill:none;stroke:var(--golgi);stroke-width:5;stroke-linecap:round}
+.golgiv{fill:var(--golgi)}
+.lyso{fill:var(--lyso);stroke:var(--d-stroke);stroke-width:1}
+.ribo{fill:var(--d-stroke)}
+.wallf{fill:var(--wall)}
+.vac{fill:var(--vac);stroke:var(--d-stroke);stroke-width:1.5}
+.chl{fill:var(--chloro);stroke:var(--d-stroke);stroke-width:1.2}
+.grana{stroke:var(--grana);stroke-width:2.2;stroke-linecap:round}
+.dna{fill:none;stroke:var(--pink);stroke-width:2.5;stroke-linecap:round}
+.capsule{fill:var(--capsule);stroke:var(--d-stroke);stroke-width:1.5;stroke-dasharray:5 4}
+.flag{fill:none;stroke:var(--d-stroke);stroke-width:3;stroke-linecap:round}
+.svgtxt{fill:var(--muted);font-family:var(--f-mono);font-size:10px}
+[data-o],[data-p]{cursor:pointer}
+[data-o]:hover,[data-p]:hover{opacity:.82}
+.sel,.sel *{stroke:var(--blue)!important;stroke-width:4px}
+.hit{fill:transparent;stroke:none}
+.ms-metal{fill:var(--metal);stroke:var(--d-stroke);stroke-width:1.5}
+.ms-dark{fill:var(--metal-dark);stroke:var(--d-stroke);stroke-width:1.5}
+.ms-glass{fill:var(--vac);stroke:var(--d-stroke);stroke-width:1}
+.ms-light{fill:var(--amber-soft);stroke:var(--amber);stroke-width:2}
+.lightpath{stroke:var(--amber);stroke-width:2;stroke-dasharray:3 4}
+.lab-line{stroke:var(--muted);stroke-width:1}
+.lab-txt{fill:var(--ink);font-family:var(--f-body);font-size:12px;font-weight:700}
+.ms-labels{display:none}
+.show-labels .ms-labels{display:inline}
+
+/* Mitosis */
+.ch{fill:none;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.ch.thin{stroke-width:2.2}
+.c0{stroke:var(--pink)} .c1{stroke:var(--blue)}
+.fiber{stroke:var(--muted);stroke-width:1;opacity:.75}
+.cent{fill:var(--ink)}
+.eq{stroke:var(--amber);stroke-width:1.5;stroke-dasharray:5 5}
+.cellbody{fill:var(--cyto);stroke:var(--d-stroke);stroke-width:2.5}
+.nucdash{fill:var(--nuc);stroke:var(--d-stroke);stroke-width:2;stroke-dasharray:6 5;fill-opacity:.55}
+.phasebar{display:flex;gap:4px;flex-wrap:wrap}
+.phasebar button{flex:1 1 90px;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:7px 6px;cursor:pointer;font-weight:700;font-size:.88rem}
+.phasebar button[aria-current="true"]{background:var(--act);color:var(--act-ink);border-color:var(--act)}
+.counter{font-family:var(--f-mono);font-size:.8rem;color:var(--pink);letter-spacing:.04em}
+.pmat{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.pmat div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.pmat b{font-family:var(--f-display);font-size:1.6rem;color:var(--pink);display:block;line-height:1}
+
+/* Tables */
+.tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:.95rem}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--surface-2)}
+tr:last-child td{border-bottom:0}
+.yes{color:var(--green);font-weight:700} .no{color:var(--pink);font-weight:700}
+
+/* Uses grid */
+.uses{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.use{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:6px;align-content:start}
+.use .mono{color:var(--green)}
+.use h3{font-size:1.08rem}
+.use .who{font-weight:700;font-size:.92rem}
+.use p{font-size:.95rem;color:var(--muted)}
+
+/* Growth */
+.growth{display:grid;gap:10px}
+.growth input[type=range]{width:100%}
+.bignum{font-family:var(--f-display);font-size:2.4rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
+.dots{display:flex;flex-wrap:wrap;gap:3px;min-height:20px}
+.dots i{width:9px;height:9px;border-radius:50%;background:var(--green)}
+
+/* Quiz */
+.quiz{display:grid;gap:12px}
+.quiz-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:center;position:sticky;top:calc(env(safe-area-inset-top,0px) + 58px);background:var(--bg);padding-block:6px;z-index:2}
+.quiz-score{font-weight:700;font-variant-numeric:tabular-nums}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;gap:10px}
+.q.ok{border-color:var(--green)} .q.bad{border-color:var(--pink)}
+.q-n{font-family:var(--f-mono);font-size:.72rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.q-t{font-weight:700}
+.opts{display:grid;gap:6px}
+.opt{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:9px 12px;text-align:left;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--blue)}
+.opt:disabled{cursor:default}
+.opt.right{background:var(--green-soft);border-color:var(--green);color:var(--ink)}
+.opt.wrong{background:var(--pink-soft);border-color:var(--pink);color:var(--ink)}
+.fb{font-size:.95rem}
+.q.ok .fb strong{color:var(--green)} .q.bad .fb strong{color:var(--pink)}
+.mrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:8px;align-items:center}
+@media (max-width:520px){.mrow{grid-template-columns:1fr}}
+select,input[type=number]{font:inherit;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);max-width:100%}
+select.good{border-color:var(--green);background:var(--green-soft)} select.badsel{border-color:var(--pink);background:var(--pink-soft)}
+.ord-pool,.ord-pick{display:flex;flex-wrap:wrap;gap:6px;min-height:40px}
+.ord-pick{border:1px dashed var(--line);border-radius:10px;padding:6px}
+.ord-pick span{background:var(--blue-soft);border-radius:8px;padding:6px 10px;font-size:.93rem}
+.ord-pick span b{font-family:var(--f-mono);margin-right:6px;color:var(--blue)}
+
+/* Flashcards */
+.fc{perspective:1000px;max-width:560px}
+.fc-inner{position:relative;min-height:220px;transition:transform .5s;transform-style:preserve-3d;cursor:pointer}
+.fc.flip .fc-inner{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:18px;border:1px solid var(--line);background:var(--surface);padding:22px;display:grid;align-content:center;gap:8px}
+.fc-face.back{transform:rotateY(180deg);background:var(--blue-soft);border-color:var(--blue)}
+.fc-face .big{font-family:var(--f-display);font-size:1.7rem;font-weight:800}
+.fc-face .mono{color:var(--muted)}
+
+.result{background:var(--blue-soft);border:2px solid var(--act);border-radius:16px;padding:16px;display:grid;gap:8px}
+footer{border-top:1px solid var(--line);padding-block:18px 30px;color:var(--muted);font-size:.88rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+
+<header class="top"><div class="wrap">
+  <div class="brand">
+    <h1>Zell<span>-</span>Labor</h1>
+    <p class="sub">Biologie · 5. Klasse · zum selbstständigen Wiederholen</p>
+  </div>
+  <div class="progress-line"><span id="progTxt">Fortschritt: 0 von 5 Tests geschafft</span><div class="bar"><i id="progBar"></i></div></div>
+</div></header>
+
+<nav class="tabs" aria-label="Module"><div class="wrap"><div class="tabrow" id="tabrow">
+  <button class="tab" data-go="start">Start</button>
+  <button class="tab" data-go="mikroskop"><span class="dot" data-dot="mikroskop"></span>Mikroskop</button>
+  <button class="tab" data-go="zelle"><span class="dot" data-dot="zelle"></span>Zelle</button>
+  <button class="tab" data-go="prokaryoten"><span class="dot" data-dot="prokaryoten"></span>Prokaryoten</button>
+  <button class="tab" data-go="mitose"><span class="dot" data-dot="mitose"></span>Mitose</button>
+  <button class="tab" data-go="karten">Karteikarten</button>
+  <button class="tab" data-go="test"><span class="dot" data-dot="test"></span>Abschlusstest</button>
+</div></div></nav>
+
+<main class="wrap">
+
+<!-- ===================== START ===================== -->
+<section class="mod" id="m-start">
+  <div class="hero">
+    <p class="mono">Selbstlernpfad · 4 Module + Test</p>
+    <h2>Alles über die Zelle – in deinem Tempo</h2>
+    <p class="lead">Hier wiederholst du alles, was wir bisher gelernt haben: das Mikroskop, den Bau der Zelle, die Prokaryoten (Bakterien) und wie sie uns nützen, und die Mitose. Jedes Modul hat Erklärungen, etwas zum Ausprobieren und einen Test mit sofortiger Rückmeldung.</p>
+  </div>
+  <div class="howto">
+    <div><b>1 · Verstehen</b><p>Lies die Erklärung. Die rosa „Merke“-Kästen gehören ins Heft.</p></div>
+    <div><b>2 · Ausprobieren</b><p>Klicke dich durch die Modelle. Tippe auf Teile, um mehr zu erfahren.</p></div>
+    <div><b>3 · Üben</b><p>Mach den Test. Ab 80 % wird das Modul grün. Du kannst beliebig oft neu mischen.</p></div>
+    <div><b>4 · Prüfen</b><p>Zum Schluss: Karteikarten und der gemischte Abschlusstest.</p></div>
+  </div>
+  <div class="cards" id="startCards"></div>
+  <p class="more">Dein Fortschritt wird nur in diesem Browser gespeichert. Auf einem anderen Gerät beginnst du wieder bei null.</p>
+</section>
+
+<!-- ===================== MIKROSKOP ===================== -->
+<section class="mod" id="m-mikroskop" hidden>
+  <div class="hero">
+    <p class="mono">Modul 1 · Werkzeug</p>
+    <h2>Das Lichtmikroskop</h2>
+    <p class="lead">Zellen sind meist kleiner als 0,1 mm – zu klein für das freie Auge. Mit dem Lichtmikroskop werden sie sichtbar.</p>
+  </div>
+  <div class="goals"><b>Das kannst du nach diesem Modul:</b><ul>
+    <li>die Teile des Mikroskops benennen und ihre Aufgabe erklären</li>
+    <li>die Gesamtvergrößerung berechnen</li>
+    <li>ein Nasspräparat herstellen und richtig scharfstellen</li></ul></div>
+
+  <div class="step">
+    <div class="step-h"><span class="num">1</span><h3>Verstehen</h3></div>
+    <div class="prose">
+      <p>Das Licht kommt von unten aus der <b>Lichtquelle</b>, geht durch die <b>Blende</b> und durch das dünne Präparat. Dann vergrößern zwei Linsensysteme hintereinander: zuerst das <b>Objektiv</b> (nahe am Objekt), dann das <b>Okular</b> (nahe am Auge).</p>
+    </div>
+    <div class="merke"><b>Merke</b>Gesamtvergrößerung = Vergrößerung Okular × Vergrößerung Objektiv<br>Beispiel: 10× · 40× = <b>400-fach</b></div>
+    <div class="prose">
+      <p><b>So stellst du richtig scharf:</b></p>
+      <ul>
+        <li>Immer mit dem <b>kleinsten Objektiv</b> beginnen – da siehst du am meisten und findest dein Objekt leichter.</li>
+        <li>Zuerst mit dem <b>Grobtrieb</b> scharfstellen, dann mit dem <b>Feintrieb</b> nachschärfen.</li>
+        <li>Bei starken Objektiven (40×) nur noch den Feintrieb verwenden – sonst kann das Objektiv das Deckglas zerdrücken.</li>
+        <li>Das Bild steht im Mikroskop <b>auf dem Kopf und ist seitenverkehrt</b>: Schiebst du das Präparat nach links, wandert das Bild nach rechts.</li>
+      </ul>
+      <p><b>Nasspräparat (z. B. Zwiebelhaut):</b> Einen Tropfen Wasser auf den Objektträger geben, das hauchdünne Häutchen hineinlegen, das Deckglas <b>schräg</b> von der Seite aufsetzen und langsam absenken – so entstehen keine Luftblasen.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><span class="num">2</span><h3>Ausprobieren</h3></div>
+    <div class="lab">
+      <div class="panel" id="msPanel">
+        <svg viewBox="-40 0 380 360" role="img" aria-label="Lichtmikroskop mit anklickbaren Teilen">
+          <path data-p="stativ" class="ms-dark" d="M210,318 L210,118 Q210,70 160,70 L146,70 L146,96 L160,96 Q186,96 186,118 L186,318 Z"/>
+          <rect data-p="fuss" class="ms-dark" x="50" y="318" width="200" height="26" rx="8"/>
+          <rect data-p="tubus" class="ms-metal" x="108" y="42" width="38" height="108" rx="3"/>
+          <g data-p="okular"><rect class="ms-dark" x="113" y="10" width="28" height="34" rx="4"/><rect class="ms-glass" x="117" y="10" width="20" height="5" rx="2"/></g>
+          <path data-p="revolver" class="ms-dark" d="M100,150 L154,150 L148,166 L106,166 Z"/>
+          <g data-p="objektiv"><rect class="ms-metal" x="106" y="166" width="11" height="22" rx="2"/><rect class="ms-metal" x="121.5" y="166" width="11" height="32" rx="2"/><rect class="ms-metal" x="137" y="166" width="11" height="27" rx="2"/></g>
+          <g data-p="tisch"><rect class="ms-metal" x="62" y="210" width="134" height="11" rx="2"/><rect class="ms-glass" x="90" y="204" width="74" height="6" rx="1"/><rect class="ms-dark" x="72" y="205" width="14" height="5" rx="1"/><rect class="ms-dark" x="168" y="205" width="14" height="5" rx="1"/></g>
+          <g data-p="blende"><rect class="ms-dark" x="110" y="224" width="34" height="14" rx="3"/><line class="lab-line" x1="144" y1="231" x2="160" y2="235" style="stroke-width:3;stroke:var(--d-stroke)"/></g>
+          <line class="lightpath" x1="127" y1="282" x2="127" y2="240"/>
+          <g data-p="licht"><rect class="ms-metal" x="109" y="292" width="36" height="26" rx="4"/><circle class="ms-light" cx="127" cy="291" r="10"/></g>
+          <g data-p="grob"><circle class="ms-metal" cx="198" cy="186" r="17"/><circle cx="198" cy="186" r="5" class="ms-dark"/></g>
+          <g data-p="fein"><circle class="ms-metal" cx="198" cy="238" r="10"/><circle cx="198" cy="238" r="3" class="ms-dark"/></g>
+          <g class="ms-labels">
+            <line class="lab-line" x1="0" y1="26" x2="113" y2="26"/><text class="lab-txt" x="-36" y="22">Okular</text>
+            <line class="lab-line" x1="0" y1="90" x2="108" y2="90"/><text class="lab-txt" x="-36" y="86">Tubus</text>
+            <line class="lab-line" x1="60" y1="152" x2="102" y2="156"/><text class="lab-txt" x="-36" y="148">Objektivrevolver</text>
+            <line class="lab-line" x1="20" y1="184" x2="106" y2="180"/><text class="lab-txt" x="-36" y="180">Objektive</text>
+            <line class="lab-line" x1="10" y1="234" x2="110" y2="231"/><text class="lab-txt" x="-36" y="238">Blende</text>
+            <line class="lab-line" x1="30" y1="300" x2="109" y2="302"/><text class="lab-txt" x="-36" y="304">Lichtquelle</text>
+            <line class="lab-line" x1="210" y1="130" x2="230" y2="130"/><text class="lab-txt" x="232" y="134">Stativ</text>
+            <line class="lab-line" x1="215" y1="186" x2="230" y2="186"/><text class="lab-txt" x="232" y="190">Grobtrieb</text>
+            <line class="lab-line" x1="196" y1="215" x2="230" y2="214"/><text class="lab-txt" x="232" y="218">Objekttisch</text>
+            <line class="lab-line" x1="208" y1="240" x2="230" y2="244"/><text class="lab-txt" x="232" y="248">Feintrieb</text>
+            <line class="lab-line" x1="250" y1="331" x2="262" y2="331"/><text class="lab-txt" x="266" y="335">Fuß</text>
+          </g>
+        </svg>
+      </div>
+      <div class="info">
+        <div class="seg" role="group" aria-label="Modus">
+          <button id="msModeLearn" aria-pressed="true">Erkunden</button>
+          <button id="msModeGame" aria-pressed="false">Suchspiel</button>
+        </div>
+        <label class="row" style="font-size:.95rem"><input type="checkbox" id="msLabels"> Beschriftung anzeigen</label>
+        <div id="msInfo" class="info"><h3>Tippe auf einen Teil</h3><p>Klicke im Bild auf einen Teil des Mikroskops – hier erscheint, wie er heißt und wozu er dient.</p></div>
+      </div>
+    </div>
+
+    <div class="panel" style="display:grid;gap:12px">
+      <h3>Vergrößerungsrechner</h3>
+      <div class="row">
+        <label>Okular <select id="okSel"><option value="10">10×</option><option value="15">15×</option></select></label>
+        <span>·</span>
+        <label>Objektiv <select id="objSel"><option value="4">4×</option><option value="10" selected>10×</option><option value="40">40×</option><option value="100">100× (Öl)</option></select></label>
+      </div>
+      <p><span class="bignum" id="vgr">100×</span></p>
+      <p id="vgrTxt" class="more"></p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><span class="num">3</span><h3>Üben</h3></div>
+    <div class="quiz" data-quiz="mikroskop"></div>
+    <p class="more">Zum Weiterlesen: <a href="https://de.wikipedia.org/wiki/Lichtmikroskop" target="_blank" rel="noopener">Lichtmikroskop (Wikipedia)</a></p>
+  </div>
+</section>
+
+<!-- ===================== ZELLE ===================== -->
+<section class="mod" id="m-zelle" hidden>
+  <div class="hero">
+    <p class="mono">Modul 2 · Grundbaustein</p>
+    <h2>Bau der Zelle</h2>
+    <p class="lead">Alle Lebewesen bestehen aus Zellen. Eine Zelle ist wie eine kleine Stadt: Jedes Zellorganell hat eine eigene Aufgabe.</p>
+  </div>
+  <div class="goals"><b>Das kannst du nach diesem Modul:</b><ul>
+    <li>die wichtigsten Zellorganellen benennen und ihre Funktion erklären</li>
+    <li>Tierzelle und Pflanzenzelle vergleichen</li>
+    <li>vom Bau einer Zelle auf ihre Aufgabe schließen (Struktur und Funktion)</li></ul></div>
+
+  <div class="step">
+    <div class="step-h"><span class="num">1</span><h3>Verstehen</h3></div>
+    <div class="prose">
+      <p>Jede Zelle ist von einer <b>Zellmembran</b> umgeben. Innen ist das <b>Cytoplasma</b> (Zellplasma) mit den Organellen. Die Bauanleitung, die <b>DNA</b>, liegt bei Tieren, Pflanzen und Pilzen im <b>Zellkern</b>. Solche Lebewesen nennt man <b>Eukaryoten</b> („echter Kern“).</p>
+      <p>Pflanzenzellen haben zusätzlich drei Dinge, die Tierzellen fehlen: eine feste <b>Zellwand</b> aus Cellulose, eine große <b>Zentralvakuole</b> mit Zellsaft und <b>Chloroplasten</b> für die Fotosynthese.</p>
+    </div>
+    <div class="merke"><b>Merke</b>Auch Pflanzenzellen haben <b>Mitochondrien</b>! Chloroplasten erzeugen Zucker mit Licht (Fotosynthese), Mitochondrien gewinnen daraus Energie (Zellatmung). Pflanzen brauchen beides.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><span class="num">2</span><h3>Ausprobieren</h3></div>
+    <div class="seg" role="group" aria-label="Zelltyp">
+      <button data-cell="tier" aria-pressed="true">Tierzelle</button>
+      <button data-cell="pflanze" aria-pressed="false">Pflanzenzelle</button>
+      <button data-cell="bakterium" aria-pressed="false">Bakterium</button>
+    </div>
+    <div class="lab">
+      <div class="panel" id="cellPanel"></div>
+      <div class="info">
+        <div id="cellInfo" class="info"><h3>Tippe auf ein Organell</h3><p>Klicke im Bild oder auf einen der Namen darunter.</p></div>
+        <div class="chips" id="cellChips"></div>
+      </div>
+    </div>
+    <p class="more">Schemazeichnungen, nicht maßstabsgetreu. Ein Bakterium ist in Wirklichkeit etwa 10-mal kleiner als eine Tierzelle.</p>
+
+    <h3>Vergleich auf einen Blick</h3>
+    <div class="tscroll"><table>
+      <thead><tr><th>Merkmal</th><th>Bakterium</th><th>Tierzelle</th><th>Pflanzenzelle</th></tr></thead>
+      <tbody>
+        <tr><td>Zellkern</td><td class="no">nein (Nucleoid)</td><td class="yes">ja</td><td class="yes">ja</td></tr>
+        <tr><td>Zellmembran</td><td class="yes">ja</td><td class="yes">ja</td><td class="yes">ja</td></tr>
+        <tr><td>Zellwand</td><td class="yes">ja (Murein)</td><td class="no">nein</td><td class="yes">ja (Cellulose)</td></tr>
+        <tr><td>Ribosomen</td><td class="yes">ja (kleinere)</td><td class="yes">ja</td><td class="yes">ja</td></tr>
+        <tr><td>Mitochondrien</td><td class="no">nein</td><td class="yes">ja</td><td class="yes">ja</td></tr>
+        <tr><td>Chloroplasten</td><td class="no">nein</td><td class="no">nein</td><td class="yes">ja</td></tr>
+        <tr><td>Große Zentralvakuole</td><td class="no">nein</td><td class="no">nein</td><td class="yes">ja</td></tr>
+        <tr><td>Typische Größe</td><td>1–10 µm</td><td>10–30 µm</td><td>10–100 µm</td></tr>
+      </tbody>
+    </table></div>
+    <div class="tipp"><b>Struktur und Funktion</b>Muskelzellen brauchen viel Energie – sie haben besonders viele Mitochondrien. Zellen in der Zwiebel liegen unter der Erde ohne Licht – sie haben keine Chloroplasten. Am Bau erkennt man die Aufgabe.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><span class="num">3</span><h3>Üben</h3></div>
+    <div class="quiz" data-quiz="zelle"></div>
+    <p class="more">Zum Weiterlesen: <a href="https://de.wikipedia.org/wiki/Zelle_(Biologie)" target="_blank" rel="noopener">Zelle (Wikipedia)</a> <a href="https://de.wikipedia.org/wiki/Organell" target="_blank" rel="noopener">Organell (Wikipedia)</a></p>
+  </div>
+</section>
+
+<!-- ===================== PROKARYOTEN ===================== -->
+<section class="mod" id="m-prokaryoten" hidden>
+  <div class="hero">
+    <p class="mono">Modul 3 · Mikroorganismen</p>
+    <h2>Prokaryoten und wie wir sie nutzen</h2>
+    <p class="lead">Bakterien sind die ältesten und häufigsten Lebewesen der Erde. Die meisten sind harmlos – viele sind für uns sogar unverzichtbar.</p>
+  </div>
+  <div class="goals"><b>Das kannst du nach diesem Modul:</b><ul>
+    <li>den Bau einer Bakterienzelle beschreiben</li>
+    <li>Prokaryoten und Eukaryoten unterscheiden</li>
+    <li>Beispiele nennen, wo Menschen Bakterien nutzen (Lebensmittel, Medizin, Umwelt, Landwirtschaft)</li>
+    <li>die Rolle von Bakterien im Stoffkreislauf erklären</li></ul></div>
+
+  <div class="step">
+    <div class="step-h"><span class="num">1</span><h3>Verstehen</h3></div>
+    <div class="prose">
+      <p><b>Prokaryoten</b> („vor dem Kern“) haben <b>keinen Zellkern</b>. Ihre DNA liegt als ringförmiges Chromosom frei im Cytoplasma – diesen Bereich nennt man <b>Nucleoid</b> (Kernäquivalent). Dazu kommen oft kleine DNA-Ringe, die <b>Plasmide</b>. Zu den Prokaryoten gehören die <b>Bakterien</b> und die <b>Archaeen</b>.</p>
+      <p>Prokaryoten haben auch keine Mitochondrien, Chloroplasten oder andere von Membranen umhüllte Organellen. Sie besitzen aber Ribosomen, eine Zellmembran und meist eine Zellwand. Viele haben eine <b>Geißel</b> zum Schwimmen und <b>Pili</b> zum Festhalten.</p>
+      <p>Bakterien vermehren sich durch <b>Zweiteilung</b>: Die DNA wird kopiert, die Zelle wächst und schnürt sich in der Mitte durch. Unter guten Bedingungen geht das alle 20 Minuten.</p>
+    </div>
+    <div class="merke"><b>Merke</b>Prokaryoten = kein Zellkern, DNA im Nucleoid, keine membranumhüllten Organellen, klein (1–10 µm).<br>Eukaryoten = mit Zellkern und Organellen (Tiere, Pflanzen, Pilze, Einzeller wie Amöben).</div>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><span class="num">2</span><h3>Ausprobieren: Wie schnell wachsen Bakterien?</h3></div>
+    <div class="panel growth">
+      <p>Ein einziges Bakterium teilt sich alle 20 Minuten. Schieb den Regler:</p>
+      <label for="growSlider" class="mono">Zeit</label>
+      <input type="range" id="growSlider" min="0" max="300" step="20" value="60">
+      <div class="row" style="justify-content:space-between">
+        <p><span class="bignum" id="growN">8</span> Bakterien</p>
+        <p class="counter" id="growT">nach 60 min · 3 Teilungen</p>
+      </div>
+      <div class="dots" id="growDots" aria-hidden="true"></div>
+      <p class="more" id="growNote"></p>
+    </div>
+    <div class="tipp"><b>Warum nicht unendlich?</b>Irgendwann gehen Nährstoffe aus, und Abfallstoffe (z. B. Säure) sammeln sich an. Darum hält Kühlen Lebensmittel länger frisch: Bei Kälte teilen sich Bakterien viel langsamer.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><span class="num">3</span><h3>Verwendung von Prokaryoten</h3></div>
+    <div class="chips" id="useFilter" role="group" aria-label="Bereich filtern">
+      <button class="chip" data-f="alle" aria-pressed="true">Alle</button>
+      <button class="chip" data-f="Lebensmittel" aria-pressed="false">Lebensmittel</button>
+      <button class="chip" data-f="Medizin" aria-pressed="false">Medizin</button>
+      <button class="chip" data-f="Umwelt" aria-pressed="false">Umwelt</button>
+      <button class="chip" data-f="Landwirtschaft" aria-pressed="false">Landwirtschaft</button>
+    </div>
+    <div class="uses" id="uses"></div>
+    <div class="merke"><b>Merke</b>Bei der <b>Milchsäuregärung</b> wandeln Milchsäurebakterien Zucker ohne Sauerstoff in Milchsäure um. Die Säure macht Lebensmittel haltbar, weil Fäulnisbakterien darin schlecht wachsen. So entstehen Joghurt, Topfen, Sauerkraut und Salzgurken.</div>
+    <div class="panel prose" style="max-width:none">
+      <h3>Hausversuch: Joghurt selber machen</h3>
+      <ul>
+        <li>500 ml Milch auf etwa 40 °C erwärmen (fühlt sich warm, aber nicht heiß an).</li>
+        <li>1 Esslöffel Naturjoghurt einrühren – darin sind lebende Milchsäurebakterien.</li>
+        <li>Zugedeckt etwa 8 Stunden warm halten (z. B. in einer Thermoskanne).</li>
+        <li><b>Beobachte:</b> Die Milch wird dick und schmeckt sauer.</li>
+      </ul>
+      <p><b>Erklärung:</b> Die Bakterien vermehren sich durch Zweiteilung und machen aus Milchzucker Milchsäure. Die Säure lässt das Milcheiweiß gerinnen – die Milch wird fest.</p>
+    </div>
+    <div class="tipp"><b>Bakterien im Stoffkreislauf</b>Bakterien und Pilze sind <b>Destruenten</b> (Zersetzer). Sie bauen tote Pflanzen, Tiere und Ausscheidungen zu Mineralstoffen, Wasser und CO₂ ab. Pflanzen nehmen diese Stoffe wieder auf. Ohne Destruenten würde die Erde unter Abfall ersticken.</div>
+    <p class="more">Nicht alle Bakterien sind nützlich: Manche sind Krankheitserreger (z. B. Salmonellen). Das lernst du in der 7. Klasse genauer.</p>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><span class="num">4</span><h3>Üben</h3></div>
+    <div class="quiz" data-quiz="prokaryoten"></div>
+    <p class="more">Zum Weiterlesen: <a href="https://de.wikipedia.org/wiki/Prokaryoten" target="_blank" rel="noopener">Prokaryoten (Wikipedia)</a> <a href="https://de.wikipedia.org/wiki/Milchs%C3%A4urebakterien" target="_blank" rel="noopener">Milchsäurebakterien (Wikipedia)</a></p>
+  </div>
+</section>
+
+<!-- ===================== MITOSE ===================== -->
+<section class="mod" id="m-mitose" hidden>
+  <div class="hero">
+    <p class="mono">Modul 4 · Zellteilung</p>
+    <h2>Die Mitose</h2>
+    <p class="lead">Du bist aus einer einzigen Zelle entstanden – heute bestehst du aus rund 30 Billionen Zellen. Möglich macht das die Mitose: die Teilung des Zellkerns in zwei gleiche Tochterkerne.</p>
+  </div>
+  <div class="goals"><b>Das kannst du nach diesem Modul:</b><ul>
+    <li>die Phasen der Mitose in der richtigen Reihenfolge nennen und beschreiben</li>
+    <li>Chromosom, Chromatid, Centromer und Spindelapparat erklären</li>
+    <li>begründen, warum die Tochterzellen genetisch gleich sind</li>
+    <li>die Bedeutung der Mitose für Wachstum, Erneuerung und Wundheilung erklären</li></ul></div>
+
+  <div class="step">
+    <div class="step-h"><span class="num">1</span><h3>Verstehen</h3></div>
+    <div class="prose">
+      <p><b>Wozu Mitose?</b> Für <b>Wachstum</b> (vom Baby zum Erwachsenen), für <b>Erneuerung</b> (deine Darmschleimhaut wird etwa alle 3–5 Tage ersetzt), für <b>Wundheilung</b> und bei vielen Pflanzen für die <b>ungeschlechtliche Vermehrung</b> (z. B. Stecklinge).</p>
+      <p><b>Das Problem:</b> Jede neue Zelle braucht die komplette Bauanleitung. Darum wird die DNA <b>vor</b> der Teilung verdoppelt. Danach besteht jedes Chromosom aus zwei gleichen Hälften, den <b>Schwesterchromatiden</b>. Sie hängen am <b>Centromer</b> zusammen – deshalb sieht ein Chromosom aus wie ein X.</p>
+      <p>Bei der Mitose werden die Schwesterchromatiden getrennt: Jede Tochterzelle bekommt von jedem Chromosom genau eine Kopie.</p>
+    </div>
+    <div class="pmat">
+      <div><b>P</b>Prophase – <i>packen</i>: Chromosomen verdichten sich</div>
+      <div><b>M</b>Metaphase – <i>Mitte</i>: Chromosomen in einer Reihe</div>
+      <div><b>A</b>Anaphase – <i>auseinander</i>: Chromatiden zu den Polen</div>
+      <div><b>T</b>Telophase – <i>Tochterkerne</i>: zwei neue Kerne</div>
+    </div>
+    <div class="merke"><b>Merke</b>Vorher: Interphase (DNA wird verdoppelt). Mitose: <b>P – M – A – T</b>. Danach: Cytokinese (das Zellplasma wird geteilt).<br>Ergebnis: 2 Tochterzellen mit <b>gleicher Chromosomenzahl</b> und <b>gleicher Erbinformation</b> wie die Mutterzelle (beim Menschen je 46 Chromosomen).</div>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><span class="num">2</span><h3>Ausprobieren: Schritt für Schritt</h3></div>
+    <div class="phasebar" id="phaseBar"></div>
+    <div class="lab">
+      <div class="panel" id="phaseSvg"></div>
+      <div class="info">
+        <p class="counter" id="phaseCount"></p>
+        <h3 id="phaseTitle"></h3>
+        <p id="phaseText"></p>
+        <div class="row"><button class="btn ghost" id="phPrev">Zurück</button><button class="btn" id="phNext">Weiter</button></div>
+        <p class="more">Modellzelle mit 4 Chromosomen. Rosa und Blau: je ein Chromosom von der Mutter und vom Vater.</p>
+      </div>
+    </div>
+    <div class="tipp"><b>Im echten Mikroskop</b>Viele Zellen in Mitose findest du in der <b>Wurzelspitze</b> der Zwiebel – dort liegt Bildungsgewebe, das ständig neue Zellen erzeugt. Die Chromosomen werden dazu angefärbt.</div>
+
+    <div class="panel" style="display:grid;gap:12px">
+      <h3>Spiel: Welche Phase siehst du?</h3>
+      <div class="lab" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+        <div id="guessSvg"></div>
+        <div style="display:grid;gap:8px;align-content:start">
+          <div class="opts" id="guessOpts"></div>
+          <p id="guessFb" class="fb"></p>
+          <p class="counter" id="guessScore">0 richtig in Folge</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><span class="num">3</span><h3>Üben</h3></div>
+    <div class="quiz" data-quiz="mitose"></div>
+    <p class="more">Zum Weiterlesen: <a href="https://de.wikipedia.org/wiki/Mitose" target="_blank" rel="noopener">Mitose (Wikipedia)</a> <a href="https://de.wikipedia.org/wiki/Zellzyklus" target="_blank" rel="noopener">Zellzyklus (Wikipedia)</a></p>
+  </div>
+</section>
+
+<!-- ===================== KARTEIKARTEN ===================== -->
+<section class="mod" id="m-karten" hidden>
+  <div class="hero">
+    <p class="mono">Wiederholen</p>
+    <h2>Karteikarten</h2>
+    <p class="lead">Lies den Begriff, erkläre ihn laut – dann dreh die Karte um. Was du gewusst hast, fliegt aus dem Stapel.</p>
+  </div>
+  <div class="row">
+    <label>Thema <select id="fcFilter">
+      <option value="alle">Alle Themen</option><option value="mikroskop">Mikroskop</option><option value="zelle">Zelle</option><option value="prokaryoten">Prokaryoten</option><option value="mitose">Mitose</option>
+    </select></label>
+    <span class="counter" id="fcCount"></span>
+  </div>
+  <div class="fc" id="fc"><div class="fc-inner" id="fcInner" tabindex="0" role="button" aria-label="Karte umdrehen">
+    <div class="fc-face"><span class="mono" id="fcTopic"></span><span class="big" id="fcFront"></span><span class="more">Tippen zum Umdrehen</span></div>
+    <div class="fc-face back"><span class="mono">Erklärung</span><p id="fcBack"></p></div>
+  </div></div>
+  <div class="row">
+    <button class="btn ghost" id="fcAgain">Nochmal üben</button>
+    <button class="btn" id="fcKnown">Gewusst</button>
+    <button class="btn ghost" id="fcReset">Stapel neu mischen</button>
+  </div>
+</section>
+
+<!-- ===================== TEST ===================== -->
+<section class="mod" id="m-test" hidden>
+  <div class="hero">
+    <p class="mono">Selbstcheck</p>
+    <h2>Abschlusstest</h2>
+    <p class="lead">12 gemischte Fragen aus allen vier Modulen. Am Ende siehst du, welches Thema du noch wiederholen solltest.</p>
+  </div>
+  <div class="quiz" id="testQuiz"></div>
+  <div class="result" id="testResult" hidden></div>
+</section>
+
+</main>
+<footer><div class="wrap">Zell-Labor · Biologie 5. Klasse AHS · Lehrplaninhalte: Zelle als Grundbaustein, Mitose, Pro- und Eukaryoten, Bedeutung von Mikroorganismen, biotechnische Verfahren bei Lebensmitteln.</div></footer>
+
+<script>
+(function(){
+"use strict";
+/* ---------- Speicher ---------- */
+const KEY='zelllabor-v1';
+let store={scores:{}};
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null'); if(s&&s.scores) store=s;}catch(e){}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){}}
+function saveScore(k,p){ if(!(store.scores[k]>=p)){store.scores[k]=p;persist();} updateProgress(); }
+
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+
+/* ---------- Navigation ---------- */
+const MODS=['start','mikroskop','zelle','prokaryoten','mitose','karten','test'];
+function go(id,scroll){
+  if(!MODS.includes(id)) id='start';
+  MODS.forEach(m=>{$('#m-'+m).hidden=(m!==id);});
+  $$('.tab').forEach(t=>t.setAttribute('aria-current',t.dataset.go===id?'true':'false'));
+  if(id==='test' && !testBuilt) buildTest();
+  if(scroll!==false) window.scrollTo({top:0});
+  try{ if(location.hash!=='#'+id) history.replaceState(null,'','#'+id);}catch(e){}
+}
+$$('.tab').forEach(t=>t.addEventListener('click',()=>go(t.dataset.go)));
+window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
+
+const INFO={
+  mikroskop:{n:'Modul 1',t:'Das Lichtmikroskop',d:'Teile, Vergrößerung, Nasspräparat, richtig scharfstellen.'},
+  zelle:{n:'Modul 2',t:'Bau der Zelle',d:'Zellorganellen, Tier- und Pflanzenzelle im Vergleich.'},
+  prokaryoten:{n:'Modul 3',t:'Prokaryoten',d:'Bakterienzelle, Zweiteilung und wie wir Bakterien nutzen.'},
+  mitose:{n:'Modul 4',t:'Mitose',d:'Phasen der Kernteilung und ihre Bedeutung.'},
+  test:{n:'Zum Schluss',t:'Abschlusstest',d:'12 gemischte Fragen aus allen Modulen.'}
+};
+function status(k){const s=store.scores[k]; if(s==null) return {c:'',t:'noch nicht gestartet'}; if(s>=80) return {c:'full',t:'geschafft · bestes Ergebnis '+s+' %'}; return {c:'half',t:'bestes Ergebnis '+s+' % – noch einmal üben'};}
+function updateProgress(){
+  const keys=Object.keys(INFO); let done=0;
+  keys.forEach(k=>{const st=status(k); if(st.c==='full') done++; const d=document.querySelector('[data-dot="'+k+'"]'); if(d) d.className='dot '+st.c;});
+  $('#progTxt').textContent='Fortschritt: '+done+' von '+keys.length+' Tests geschafft';
+  $('#progBar').style.width=(done/keys.length*100)+'%';
+  const box=$('#startCards'); box.innerHTML='';
+  keys.forEach(k=>{const st=status(k); const b=document.createElement('button'); b.className='mcard';
+    b.innerHTML='<span class="mono">'+INFO[k].n+'</span><h3>'+INFO[k].t+'</h3><p>'+INFO[k].d+'</p><span class="st" style="color:var('+(st.c==='full'?'--green':st.c==='half'?'--amber':'--muted')+')">'+st.t+'</span>';
+    b.addEventListener('click',()=>go(k)); box.appendChild(b);});
+}
+
+/* ---------- Fragen ---------- */
+const Q={
+mikroskop:[
+ {t:'num',q:'Okular 10×, Objektiv 40×. Wie stark ist die Gesamtvergrößerung? (nur die Zahl)',a:400,e:'10 · 40 = 400. Die beiden Vergrößerungen werden multipliziert.'},
+ {t:'num',q:'Okular 15×, Objektiv 10×. Wie stark ist die Gesamtvergrößerung?',a:150,e:'15 · 10 = 150-fach.'},
+ {t:'tf',q:'Man beginnt beim Mikroskopieren mit dem stärksten Objektiv.',a:false,e:'Falsch. Man beginnt mit dem kleinsten Objektiv: größeres Sichtfeld, Objekt leichter zu finden, kein Risiko fürs Deckglas.'},
+ {t:'mc',q:'Womit stellt man beim 40×-Objektiv scharf?',o:['Mit dem Feintrieb','Mit dem Grobtrieb','Mit der Blende','Mit dem Objektivrevolver'],a:0,e:'Nur der Feintrieb. Der Grobtrieb bewegt den Tisch zu stark – das Objektiv könnte das Präparat zerdrücken.'},
+ {t:'tf',q:'Das Bild im Mikroskop steht auf dem Kopf und ist seitenverkehrt.',a:true,e:'Richtig. Schiebst du das Präparat nach links, bewegt sich das Bild nach rechts.'},
+ {t:'order',q:'Bring die Schritte beim Mikroskopieren in die richtige Reihenfolge.',items:['Präparat auf den Objekttisch legen','Kleinstes Objektiv einschwenken','Mit dem Grobtrieb scharfstellen','Mit dem Feintrieb nachschärfen','Nächststärkeres Objektiv einschwenken'],e:'Klein anfangen, grob vor fein, erst dann stärker vergrößern.'},
+ {t:'match',q:'Ordne jedem Teil seine Aufgabe zu.',pairs:[['Okular','Linse, durch die man schaut'],['Blende','regelt die Lichtmenge und den Kontrast'],['Objekttisch','Auflage für den Objektträger'],['Objektivrevolver','damit wechselt man die Objektive']],e:'Okular am Auge, Objektiv am Objekt, Blende für das Licht.'},
+ {t:'mc',q:'Warum setzt man das Deckglas schräg auf?',o:['Damit keine Luftblasen entstehen','Damit das Präparat gefärbt wird','Damit das Bild heller wird','Damit das Wasser verdunstet'],a:0,e:'Schräg auflegen und langsam absenken drückt die Luft zur Seite hinaus.'}
+],
+zelle:[
+ {t:'mc',q:'Wo liegt die DNA einer Tierzelle hauptsächlich?',o:['Im Zellkern','In der Zellmembran','In den Ribosomen','In der Vakuole'],a:0,e:'Bei Eukaryoten liegt die DNA im Zellkern (kleine Mengen auch in Mitochondrien).'},
+ {t:'match',q:'Ordne jedem Organell seine Aufgabe zu.',pairs:[['Mitochondrium','Zellatmung – gewinnt Energie'],['Chloroplast','Fotosynthese – baut Zucker mit Licht'],['Ribosom','stellt Proteine (Eiweiße) her'],['Zellmembran','Grenze, regelt den Stoffaustausch'],['Vakuole','speichert Zellsaft, hält die Zelle prall']],e:'Kraftwerk, Solarkraftwerk, Fabrik, Stadtmauer mit Toren, Wassertank.'},
+ {t:'tf',q:'Tierzellen besitzen Chloroplasten.',a:false,e:'Falsch. Chloroplasten gibt es nur in Pflanzenzellen (und Algen).'},
+ {t:'tf',q:'Pflanzenzellen besitzen Mitochondrien.',a:true,e:'Richtig! Auch Pflanzen betreiben Zellatmung. Ein häufiger Fehler.'},
+ {t:'mc',q:'Was gibt der Pflanzenzelle ihre feste Form?',o:['Die Zellwand aus Cellulose','Die Zellmembran','Das Cytoplasma','Der Zellkern'],a:0,e:'Die Zellwand ist stabil, zusammen mit dem Druck der Vakuole wird die Zelle fest.'},
+ {t:'mc',q:'Warum haben Zellen der Zwiebelhaut keine Chloroplasten?',o:['Die Zwiebel wächst unter der Erde und bekommt kein Licht','Zwiebeln sind keine Pflanzen','Die Zellwand ist zu dick','Die Chloroplasten sind zu klein zum Sehen'],a:0,e:'Ohne Licht keine Fotosynthese – darum braucht die Zelle keine Chloroplasten (Struktur passt zur Funktion).'},
+ {t:'mc',q:'Welche Struktur haben ALLE Zellen?',o:['Zellmembran','Zellkern','Zellwand','Chloroplasten'],a:0,e:'Jede Zelle hat Zellmembran, Cytoplasma, Ribosomen und DNA. Bakterien fehlt der Kern, Tierzellen die Zellwand.'},
+ {t:'tf',q:'Muskelzellen besitzen besonders viele Mitochondrien.',a:true,e:'Richtig. Muskeln brauchen viel Energie – mehr Kraftwerke.'},
+ {t:'mc',q:'Welche Aufgabe hat der Golgi-Apparat?',o:['Er verpackt Stoffe in Bläschen und verschickt sie','Er speichert die Erbinformation','Er betreibt Fotosynthese','Er bildet die Zellwand der Tierzelle'],a:0,e:'Der Golgi-Apparat ist die „Post“ der Zelle.'}
+],
+prokaryoten:[
+ {t:'mc',q:'Was fehlt Prokaryoten?',o:['Ein Zellkern','Ribosomen','Eine Zellmembran','DNA'],a:0,e:'Prokaryoten haben keinen Zellkern – die DNA liegt im Nucleoid frei im Cytoplasma.'},
+ {t:'tf',q:'Bakterien besitzen Ribosomen.',a:true,e:'Richtig. Jede Zelle braucht Ribosomen, um Proteine herzustellen.'},
+ {t:'mc',q:'Wie vermehren sich Bakterien?',o:['Durch Zweiteilung','Durch Mitose','Durch Sporen in Blüten','Durch Knospung aus dem Zellkern'],a:0,e:'Zweiteilung: DNA kopieren, wachsen, in der Mitte durchschnüren. Mitose gibt es nur bei Eukaryoten.'},
+ {t:'match',q:'Wer steckt dahinter? Ordne zu.',pairs:[['Joghurt','Milchsäurebakterien'],['Essig','Essigsäurebakterien'],['Insulin für Menschen mit Diabetes','gentechnisch veränderte E. coli'],['Löcher im Emmentaler','Propionsäurebakterien']],e:'Diese biotechnischen Verfahren nutzen den Stoffwechsel der Bakterien.'},
+ {t:'num',q:'Ein Bakterium teilt sich alle 20 Minuten. Wie viele Bakterien sind es nach 2 Stunden?',a:64,e:'2 h = 120 min = 6 Teilungen. 2⁶ = 2·2·2·2·2·2 = 64.'},
+ {t:'tf',q:'Alle Bakterien machen krank.',a:false,e:'Falsch. Die meisten sind harmlos oder nützlich – z. B. Darmbakterien, Milchsäurebakterien, Destruenten.'},
+ {t:'mc',q:'Was leisten Knöllchenbakterien?',o:['Sie binden Stickstoff aus der Luft für Pflanzen wie Bohnen und Klee','Sie machen Milch sauer','Sie bauen Plastik ab','Sie erzeugen Sauerstoff im Boden'],a:0,e:'Sie leben in den Wurzelknöllchen und liefern der Pflanze Stickstoff – ein natürlicher Dünger.'},
+ {t:'mc',q:'Welche Aufgabe haben Bakterien in der Kläranlage?',o:['Sie bauen organische Stoffe im Abwasser ab','Sie färben das Wasser','Sie töten alle Fische','Sie erzeugen Chlor'],a:0,e:'Im Belebungsbecken „fressen“ Bakterien die Schmutzstoffe und reinigen so das Wasser.'},
+ {t:'mc',q:'Wie groß ist ein typisches Bakterium?',o:['1–10 µm','1–10 mm','1–10 nm','1–10 cm'],a:0,e:'Mikrometer (µm) – ein Tausendstel Millimeter. Etwa 10-mal kleiner als eine Tierzelle.'},
+ {t:'tf',q:'Plasmide sind kleine ringförmige DNA-Stücke, die man in der Gentechnik nutzt.',a:true,e:'Richtig. Beim Insulin wird das menschliche Gen in ein Plasmid eingebaut.'}
+],
+mitose:[
+ {t:'order',q:'Bring die Phasen der Mitose in die richtige Reihenfolge.',items:['Prophase','Metaphase','Anaphase','Telophase'],e:'P – M – A – T.'},
+ {t:'mc',q:'In welcher Phase liegen die Chromosomen in der Äquatorialebene?',o:['Metaphase','Prophase','Anaphase','Telophase'],a:0,e:'Metaphase – M wie Mitte.'},
+ {t:'mc',q:'Wann wird die DNA verdoppelt?',o:['In der Interphase, vor der Mitose','In der Anaphase','In der Telophase','Gar nicht'],a:0,e:'Die Verdopplung passiert vorher, in der Interphase. Sonst hätte eine Tochterzelle zu wenig DNA.'},
+ {t:'mc',q:'Eine Hautzelle des Menschen hat 46 Chromosomen. Wie viele hat jede Tochterzelle nach der Mitose?',o:['46','23','92','12'],a:0,e:'Gleich viele wie die Mutterzelle: 46. (Halbiert wird nur bei der Meiose – das kommt in der 6. Klasse.)'},
+ {t:'tf',q:'Die beiden Tochterzellen der Mitose haben dieselbe Erbinformation.',a:true,e:'Richtig. Jede bekommt eine Schwesterchromatide von jedem Chromosom – und die sind identische Kopien.'},
+ {t:'mc',q:'Was passiert in der Anaphase?',o:['Die Schwesterchromatiden werden zu den Zellpolen gezogen','Die Kernhülle bildet sich neu','Die DNA wird kopiert','Die Chromosomen verdichten sich'],a:0,e:'A wie auseinander: Die Spindelfasern verkürzen sich und ziehen die Chromatiden zu den Polen.'},
+ {t:'mc',q:'Wofür ist die Mitose NICHT zuständig?',o:['Bildung von Ei- und Samenzellen','Wachstum','Wundheilung','Erneuerung der Haut'],a:0,e:'Ei- und Samenzellen entstehen durch Meiose.'},
+ {t:'tf',q:'Bakterien vermehren sich durch Mitose.',a:false,e:'Falsch. Bakterien haben keinen Zellkern – sie teilen sich durch Zweiteilung.'},
+ {t:'mc',q:'Wo findet man in einer Pflanze besonders viele Zellen in Mitose?',o:['In der Wurzelspitze','In alten Blättern','In der Rinde eines toten Baumes','In der Zwiebelhaut'],a:0,e:'An der Wurzelspitze liegt Bildungsgewebe, das ständig neue Zellen bildet.'},
+ {t:'mc',q:'Woraus besteht ein Chromosom in der Metaphase?',o:['Aus zwei Schwesterchromatiden, die am Centromer verbunden sind','Aus einer einzigen Chromatide','Aus vier Chromatiden','Aus Ribosomen'],a:0,e:'Deshalb die X-Form: zwei gleiche Hälften, in der Mitte am Centromer verbunden.'}
+]};
+
+/* ---------- Quiz-Engine ---------- */
+let qid=0;
+function renderQuiz(box,qs,key,onAll){
+  box.innerHTML='';
+  const head=document.createElement('div'); head.className='quiz-head';
+  const sc=document.createElement('p'); sc.className='quiz-score';
+  const again=document.createElement('button'); again.className='btn ghost'; again.textContent='Neu mischen';
+  again.addEventListener('click',()=>renderQuiz(box,qs,key,onAll));
+  head.append(sc,again); box.appendChild(head);
+  let done=0,right=0; const n=qs.length; const log=[];
+  const upd=()=>{ sc.textContent=done+' von '+n+' beantwortet · '+right+' richtig';
+    if(done===n){const p=Math.round(right/n*100); sc.textContent+=' · '+p+' %'; saveScore(key,p); if(onAll) onAll(p,log);} };
+  upd();
+  shuffle(qs).forEach((q,i)=>{
+    const id='q'+(qid++);
+    const card=document.createElement('div'); card.className='q';
+    card.innerHTML='<p class="q-n">Frage '+(i+1)+(q.mod?' · '+INFO[q.mod].t:'')+'</p><p class="q-t">'+q.q+'</p>';
+    const body=document.createElement('div');
+    const fb=document.createElement('p'); fb.className='fb'; fb.hidden=true;
+    let finished=false;
+    const finish=(ok,extra)=>{ if(finished) return; finished=true; done++; if(ok) right++; log.push({mod:q.mod,ok});
+      card.classList.add(ok?'ok':'bad'); fb.hidden=false;
+      fb.innerHTML='<strong>'+(ok?'Richtig!':'Noch nicht.')+'</strong> '+(extra||'')+q.e; upd(); };
+    if(q.t==='mc'||q.t==='tf'){
+      const opts=q.t==='tf'?[{l:'Richtig',v:true},{l:'Falsch',v:false}]:shuffle(q.o.map((l,ix)=>({l,v:ix})));
+      const wrap=document.createElement('div'); wrap.className='opts';
+      const btns=opts.map(o=>{const b=document.createElement('button'); b.className='opt'; b.textContent=o.l;
+        b.addEventListener('click',()=>{ const ok=o.v===q.a; btns.forEach((bb,j)=>{bb.disabled=true; if(opts[j].v===q.a) bb.classList.add('right');}); if(!ok) b.classList.add('wrong'); finish(ok);});
+        wrap.appendChild(b); return b;});
+      body.appendChild(wrap);
+    } else if(q.t==='num'){
+      const r=document.createElement('div'); r.className='row';
+      const inp=document.createElement('input'); inp.type='number'; inp.id=id+'-n'; inp.setAttribute('aria-label','Antwort'); inp.style.width='130px';
+      const b=document.createElement('button'); b.className='btn'; b.textContent='Prüfen';
+      const check=()=>{ if(inp.value==='') return; const ok=Number(inp.value.replace(',','.'))===q.a; inp.disabled=true; b.disabled=true; finish(ok, ok?'':'Lösung: '+q.a+'. ');};
+      b.addEventListener('click',check); inp.addEventListener('keydown',e=>{if(e.key==='Enter') check();});
+      r.append(inp,b); body.appendChild(r);
+    } else if(q.t==='match'){
+      const rights=shuffle(q.pairs.map(p=>p[1]));
+      const sels=q.pairs.map((p,ix)=>{ const row=document.createElement('div'); row.className='mrow';
+        const lab=document.createElement('label'); lab.htmlFor=id+'-m'+ix; lab.innerHTML='<b>'+p[0]+'</b>';
+        const s=document.createElement('select'); s.id=id+'-m'+ix;
+        s.innerHTML='<option value="">– wählen –</option>'+rights.map(r=>'<option>'+r+'</option>').join('');
+        row.append(lab,s); body.appendChild(row); return s;});
+      const b=document.createElement('button'); b.className='btn'; b.textContent='Prüfen'; b.style.justifySelf='start';
+      const hint=document.createElement('p'); hint.className='more';
+      b.addEventListener('click',()=>{ if(sels.some(s=>!s.value)){hint.textContent='Wähle zuerst überall etwas aus.';return;} hint.textContent='';
+        let all=true; sels.forEach((s,ix)=>{const ok=s.value===q.pairs[ix][1]; s.classList.add(ok?'good':'badsel'); if(!ok){all=false; s.insertAdjacentHTML('afterend','<span class="more" style="grid-column:1/-1">richtig: '+q.pairs[ix][1]+'</span>');} s.disabled=true;});
+        b.disabled=true; finish(all);});
+      body.style.display='grid'; body.style.gap='8px'; body.append(b,hint);
+    } else if(q.t==='order'){
+      const pick=document.createElement('div'); pick.className='ord-pick';
+      const pool=document.createElement('div'); pool.className='ord-pool';
+      const reset=document.createElement('button'); reset.className='btn ghost'; reset.textContent='Zurücksetzen';
+      let chosen=[];
+      const draw=()=>{ pick.innerHTML=chosen.length?chosen.map((c,ix)=>'<span><b>'+(ix+1)+'</b>'+c+'</span>').join(''):'<span class="more" style="background:none">Tippe die Schritte unten der Reihe nach an.</span>';
+        pool.innerHTML=''; shuffledItems.filter(it=>!chosen.includes(it)).forEach(it=>{const b=document.createElement('button'); b.className='opt'; b.textContent=it;
+          b.addEventListener('click',()=>{chosen.push(it); draw(); if(chosen.length===q.items.length){ const ok=chosen.every((c,ix)=>c===q.items[ix]); reset.disabled=true; finish(ok, ok?'':'Richtig wäre: '+q.items.join(' → ')+'. ');}});
+          pool.appendChild(b);});};
+      const shuffledItems=shuffle(q.items);
+      reset.addEventListener('click',()=>{chosen=[];draw();});
+      body.style.display='grid'; body.style.gap='8px'; body.append(pick,pool,reset); draw();
+    }
+    card.append(body,fb); box.appendChild(card);
+  });
+}
+$$('[data-quiz]').forEach(b=>renderQuiz(b,Q[b.dataset.quiz],b.dataset.quiz));
+
+/* ---------- Abschlusstest ---------- */
+let testBuilt=false;
+function buildTest(){
+  testBuilt=true;
+  const pool=[]; ['mikroskop','zelle','prokaryoten','mitose'].forEach(m=>{ shuffle(Q[m]).slice(0,3).forEach(q=>pool.push(Object.assign({mod:m},q))); });
+  const res=$('#testResult'); res.hidden=true;
+  renderQuiz($('#testQuiz'),pool,'test',(p,log)=>{
+    const per={}; log.forEach(l=>{per[l.mod]=per[l.mod]||{r:0,n:0}; per[l.mod].n++; if(l.ok) per[l.mod].r++;});
+    const weak=Object.keys(per).filter(m=>per[m].r<per[m].n*0.67);
+    res.hidden=false;
+    res.innerHTML='<h3>'+p+' % richtig</h3><p>'+Object.keys(per).map(m=>INFO[m].t+': '+per[m].r+' / '+per[m].n).join(' · ')+'</p>'+
+      (weak.length?'<p>Wiederhole noch: '+weak.map(m=>'<button class="chip" data-jump="'+m+'">'+INFO[m].t+'</button>').join(' ')+'</p>':'<p>Stark – du bist bereit für die Prüfung!</p>')+
+      '<p><button class="btn" id="testNew">Neuen Test starten</button></p>';
+    res.querySelectorAll('[data-jump]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.jump)));
+    $('#testNew').addEventListener('click',()=>{buildTest(); window.scrollTo({top:0});});
+  });
+}
+
+/* ---------- Mikroskop ---------- */
+const MS={
+ okular:['Okular','Die Linse, durch die du schaust. Meist 10-fache Vergrößerung.'],
+ tubus:['Tubus','Rohr, das Okular und Objektive verbindet. Darin läuft das Licht nach oben.'],
+ revolver:['Objektivrevolver','Drehbare Scheibe. Damit wechselst du die Objektive – es klickt hörbar, wenn eines einrastet.'],
+ objektiv:['Objektive','Linsen nahe am Präparat, z. B. 4×, 10×, 40×. Je länger das Objektiv, desto stärker vergrößert es.'],
+ tisch:['Objekttisch','Hier liegt der Objektträger mit dem Präparat. Klemmen halten ihn fest.'],
+ blende:['Blende (mit Kondensor)','Regelt, wie viel Licht durch das Präparat fällt. Weniger Licht = mehr Kontrast, gut für durchsichtige Zellen.'],
+ licht:['Lichtquelle','Beleuchtet das Präparat von unten. Das Licht muss durch das Objekt hindurch – darum müssen Präparate sehr dünn sein.'],
+ grob:['Grobtrieb','Großes Rad: bewegt den Tisch stark auf und ab. Nur bei kleiner Vergrößerung verwenden.'],
+ fein:['Feintrieb','Kleines Rad zum genauen Nachschärfen – bei starker Vergrößerung das einzige Rad, das du benutzt.'],
+ stativ:['Stativ','Der Arm des Mikroskops. Beim Tragen: eine Hand am Stativ, eine Hand unter dem Fuß.'],
+ fuss:['Fuß','Schwere Basis, damit das Mikroskop sicher steht.']
+};
+let msMode='learn', msTarget=null, msStreak=0;
+const msInfo=$('#msInfo');
+function msSel(p){ $$('#msPanel [data-p]').forEach(e=>e.classList.toggle('sel',e.dataset.p===p)); }
+function msNewTarget(){ const keys=Object.keys(MS).filter(k=>k!==msTarget); msTarget=keys[Math.floor(Math.random()*keys.length)];
+  msInfo.innerHTML='<p class="counter">'+msStreak+' richtig in Folge</p><h3>Wo ist: '+MS[msTarget][0]+'?</h3><p>Tippe im Bild auf den richtigen Teil.</p>'; msSel(null);}
+$$('#msPanel [data-p]').forEach(e=>e.addEventListener('click',()=>{
+  const p=e.dataset.p;
+  if(msMode==='learn'){ msSel(p); msInfo.innerHTML='<h3>'+MS[p][0]+'</h3><p>'+MS[p][1]+'</p>'; }
+  else{ if(p===msTarget){ msStreak++; msSel(p); msInfo.innerHTML='<p class="counter">'+msStreak+' richtig in Folge</p><h3 style="color:var(--green)">Richtig: '+MS[p][0]+'</h3><p>'+MS[p][1]+'</p><button class="btn" id="msNext">Nächster Teil</button>'; $('#msNext').addEventListener('click',msNewTarget);}
+        else { msStreak=0; msSel(p); msInfo.innerHTML='<p class="counter">0 richtig in Folge</p><h3 style="color:var(--pink)">Das ist: '+MS[p][0]+'</h3><p>Gesucht ist: <b>'+MS[msTarget][0]+'</b>. Versuch es noch einmal.</p>'; } }
+}));
+$('#msModeLearn').addEventListener('click',()=>{msMode='learn';$('#msModeLearn').setAttribute('aria-pressed','true');$('#msModeGame').setAttribute('aria-pressed','false');msSel(null);msInfo.innerHTML='<h3>Tippe auf einen Teil</h3><p>Klicke im Bild auf einen Teil des Mikroskops.</p>';});
+$('#msModeGame').addEventListener('click',()=>{msMode='game';msStreak=0;$('#msModeGame').setAttribute('aria-pressed','true');$('#msModeLearn').setAttribute('aria-pressed','false');$('#msLabels').checked=false;$('#msPanel').classList.remove('show-labels');msNewTarget();});
+$('#msLabels').addEventListener('change',e=>$('#msPanel').classList.toggle('show-labels',e.target.checked));
+function calc(){ const o=+$('#okSel').value, b=+$('#objSel').value, v=o*b; $('#vgr').textContent=v+'×';
+  const mm=(1/v*1000).toFixed(v>=400?1:0);
+  $('#vgrTxt').textContent=o+' · '+b+' = '+v+'. Ein Objekt von 1 µm erscheint so groß wie '+(v/1000).toLocaleString('de-AT')+' mm.'+(b===100?' Das 100×-Objektiv braucht einen Tropfen Immersionsöl.':''); }
+$('#okSel').addEventListener('change',calc); $('#objSel').addEventListener('change',calc); calc();
+
+/* ---------- Zelle ---------- */
+const ORG={
+ membran:['Zellmembran','Hauchdünne Hülle um jede Zelle. Sie lässt bestimmte Stoffe hinein und hinaus.','Stadtmauer mit Toren','TPB'],
+ plasma:['Cytoplasma (Zellplasma)','Gelartige Flüssigkeit, in der die Organellen schwimmen. Hier laufen viele Stoffwechselvorgänge ab.','Straßen und Plätze der Stadt','TPB'],
+ kern:['Zellkern','Enthält die DNA – die Bauanleitung der Zelle. Steuert, was in der Zelle passiert. Der dunkle Fleck innen ist das Kernkörperchen.','Rathaus mit Bauplänen','TP'],
+ mito:['Mitochondrium','Gewinnt durch Zellatmung Energie aus Zucker und Sauerstoff. Die innere Membran ist stark gefaltet – mehr Fläche, mehr Energie.','Kraftwerk','TP'],
+ ribo:['Ribosomen','Winzige Körnchen, die Proteine (Eiweiße) herstellen. Sie sitzen frei im Plasma oder am rauen ER.','Fabriken','TPB'],
+ er:['Endoplasmatisches Retikulum (ER)','Netz aus Membranschläuchen. Transportiert Stoffe durch die Zelle; das raue ER ist mit Ribosomen besetzt.','Straßen- und Kanalnetz','TP'],
+ golgi:['Golgi-Apparat','Stapel aus flachen Membransäckchen. Verpackt Stoffe in Bläschen und verschickt sie.','Post','TP'],
+ lyso:['Lysosom','Bläschen mit Verdauungsenzymen. Baut Abfall und alte Zellteile ab.','Müllabfuhr und Recyclinghof','T'],
+ vakuole:['Zentralvakuole','Großer Speicher mit Zellsaft (Wasser, Zucker, Farbstoffe). Drückt von innen gegen die Zellwand und hält die Pflanze prall.','Wasserturm','P'],
+ chloro:['Chloroplast','Enthält grünes Chlorophyll. Baut mit Lichtenergie aus CO₂ und Wasser Zucker auf (Fotosynthese).','Solarkraftwerk','P'],
+ wand:['Zellwand','Feste Hülle außerhalb der Membran. Bei Pflanzen aus Cellulose, bei Bakterien aus Murein. Gibt Form und Schutz.','dicke Stadtmauer','PB'],
+ nucleoid:['Nucleoid (Kernäquivalent)','Bereich, in dem die ringförmige DNA des Bakteriums frei im Cytoplasma liegt – ohne Kernhülle.','Baupläne ohne Rathaus','B'],
+ plasmid:['Plasmid','Kleiner DNA-Ring mit Zusatzinformationen (z. B. Resistenz gegen Antibiotika). In der Gentechnik nutzt man Plasmide, um Gene in Bakterien zu bringen.','USB-Stick mit Extra-Daten','B'],
+ geissel:['Geißel','Langer Faden, der sich wie ein Propeller dreht – damit schwimmt das Bakterium.','Schiffsschraube','B'],
+ kapsel:['Kapsel (Schleimhülle)','Schützt manche Bakterien vor Austrocknung und vor dem Immunsystem.','Regenmantel','B'],
+ pili:['Pili','Kurze Härchen zum Festhalten an Oberflächen und zum Austausch von Plasmiden.','Klettverschluss','B']
+};
+const CELL_ORGS={tier:['membran','plasma','kern','mito','ribo','er','golgi','lyso'],pflanze:['wand','membran','plasma','kern','vakuole','chloro','mito','ribo','er','golgi'],bakterium:['kapsel','wand','membran','plasma','nucleoid','plasmid','ribo','geissel','pili']};
+function mitoG(x,y,r,s){s=s||1;return '<g data-o="mito" transform="translate('+x+','+y+') rotate('+r+') scale('+s+')"><ellipse class="mito" rx="26" ry="13"/><path class="cristae" d="M-19,0 l5,-8 l5,16 l5,-16 l5,16 l5,-16 l5,16 l4,-8"/></g>';}
+function chlG(x,y,r){return '<g data-o="chloro" transform="translate('+x+','+y+') rotate('+r+')"><ellipse class="chl" rx="22" ry="11"/><line class="grana" x1="-13" y1="-3" x2="-13" y2="3"/><line class="grana" x1="-6" y1="-4" x2="-6" y2="4"/><line class="grana" x1="1" y1="-4" x2="1" y2="4"/><line class="grana" x1="8" y1="-4" x2="8" y2="4"/><line class="grana" x1="14" y1="-3" x2="14" y2="3"/></g>';}
+function golgiG(x,y,s){return '<g data-o="golgi" transform="translate('+x+','+y+') scale('+s+')"><path class="golgi" d="M-26,-14 q26,-12 52,0"/><path class="golgi" d="M-24,-4 q24,-11 48,0"/><path class="golgi" d="M-22,6 q22,-10 44,0"/><path class="golgi" d="M-20,16 q20,-9 40,0"/><circle class="golgiv" cx="32" cy="-4" r="4"/><circle class="golgiv" cx="30" cy="12" r="3.5"/></g>';}
+function ribos(pts){return '<g data-o="ribo">'+pts.map(p=>'<circle class="ribo" cx="'+p[0]+'" cy="'+p[1]+'" r="2.6"/>').join('')+'<rect class="hit" x="0" y="0" width="0" height="0"/></g>';}
+const CELLSVG={
+tier:'<svg viewBox="0 0 360 250" role="img" aria-label="Schema einer Tierzelle">'+
+ '<ellipse data-o="plasma" class="cyto" cx="180" cy="125" rx="165" ry="112"/>'+
+ '<g data-o="er"><path class="er" d="M118,78 q12,-16 26,-10 t26,-6"/><path class="er" d="M110,96 q-6,16 2,30"/><path class="er" d="M112,150 q8,16 24,22 t26,6"/><path class="er" d="M100,110 q-8,20 0,42"/></g>'+
+ '<circle data-o="kern" class="nuc" cx="170" cy="125" r="44"/><circle data-o="kern" class="nucleolus" cx="180" cy="118" r="13"/>'+
+ mitoG(70,92,-25)+mitoG(272,186,15)+mitoG(108,200,30,.85)+golgiG(268,108,1)+
+ '<circle data-o="lyso" class="lyso" cx="236" cy="56" r="10"/><circle data-o="lyso" class="lyso" cx="62" cy="152" r="8"/>'+
+ ribos([[130,62],[150,58],[96,124],[98,140],[230,150],[245,158],[205,200],[215,60],[300,140],[60,120],[160,210],[185,215]])+
+ '<ellipse data-o="membran" class="membrane" cx="180" cy="125" rx="165" ry="112"/></svg>',
+pflanze:'<svg viewBox="0 0 360 250" role="img" aria-label="Schema einer Pflanzenzelle">'+
+ '<rect data-o="wand" class="wallf" x="6" y="6" width="348" height="238" rx="14"/>'+
+ '<rect data-o="plasma" class="cyto" x="18" y="18" width="324" height="214" rx="10"/>'+
+ '<rect data-o="vakuole" class="vac" x="138" y="34" width="190" height="160" rx="36"/>'+
+ '<g data-o="er"><path class="er" d="M44,108 q10,10 26,8 t28,4"/><path class="er" d="M108,52 q8,14 4,30"/></g>'+
+ '<circle data-o="kern" class="nuc" cx="72" cy="66" r="30"/><circle data-o="kern" class="nucleolus" cx="80" cy="60" r="9"/>'+
+ golgiG(64,150,.7)+mitoG(112,140,60,.65)+mitoG(232,212,0,.6)+
+ chlG(46,198,70)+chlG(110,214,0)+chlG(170,214,-5)+chlG(296,214,5)+chlG(122,186,-30)+
+ ribos([[40,130],[100,104],[126,110],[60,226],[200,222],[270,226],[330,212],[30,40],[120,30]])+
+ '<rect data-o="membran" class="membrane" x="18" y="18" width="324" height="214" rx="10"/></svg>',
+bakterium:'<svg viewBox="0 0 360 250" role="img" aria-label="Schema einer Bakterienzelle">'+
+ '<g data-o="pili"><line class="flag" style="stroke-width:2" x1="100" y1="64" x2="94" y2="44"/><line class="flag" style="stroke-width:2" x1="150" y1="60" x2="150" y2="40"/><line class="flag" style="stroke-width:2" x1="210" y1="60" x2="216" y2="40"/><line class="flag" style="stroke-width:2" x1="120" y1="188" x2="114" y2="208"/><line class="flag" style="stroke-width:2" x1="200" y1="190" x2="206" y2="210"/></g>'+
+ '<path data-o="geissel" class="flag" d="M298,125 q9,-16 18,0 t18,0 t18,0"/>'+
+ '<rect data-o="kapsel" class="capsule" x="28" y="58" width="274" height="134" rx="67"/>'+
+ '<rect data-o="wand" class="wallf" x="40" y="70" width="250" height="110" rx="55"/>'+
+ '<rect data-o="plasma" class="cyto" x="48" y="78" width="234" height="94" rx="47"/>'+
+ '<path data-o="nucleoid" class="dna" d="M130,118 q10,-22 30,-10 t30,-2 q20,8 8,22 t-26,14 q-18,6 -30,-4 t-14,-8 q-4,-6 2,-12"/>'+
+ '<circle data-o="plasmid" class="dna" cx="92" cy="108" r="9"/><circle data-o="plasmid" class="dna" cx="246" cy="146" r="8"/>'+
+ ribos([[80,140],[96,152],[118,96],[230,104],[250,112],[262,128],[150,160],[210,156],[70,122]])+
+ '<rect data-o="membran" class="membrane" style="stroke-width:3" x="48" y="78" width="234" height="94" rx="47"/></svg>'
+};
+let curCell='tier';
+function showOrg(k){
+  $$('#cellPanel [data-o]').forEach(e=>e.classList.toggle('sel',e.dataset.o===k));
+  $$('#cellChips .chip').forEach(c=>c.setAttribute('aria-pressed',c.dataset.k===k?'true':'false'));
+  const o=ORG[k]; const where=[['T','Tierzelle'],['P','Pflanzenzelle'],['B','Bakterium']].map(w=>'<span class="tag '+(o[3].includes(w[0])?'y':'n')+'">'+(o[3].includes(w[0])?'✓ ':'✗ ')+w[1]+'</span>').join('');
+  $('#cellInfo').innerHTML='<h3>'+o[0]+'</h3><p>'+o[1]+'</p><p><b>Vergleich:</b> '+o[2]+'</p><div>'+where+'</div>';
+}
+function drawCell(t){
+  curCell=t; $$('[data-cell]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.cell===t?'true':'false'));
+  $('#cellPanel').innerHTML=CELLSVG[t];
+  $$('#cellPanel [data-o]').forEach(e=>e.addEventListener('click',ev=>{ev.stopPropagation(); showOrg(e.dataset.o);}));
+  $('#cellChips').innerHTML=CELL_ORGS[t].map(k=>'<button class="chip" data-k="'+k+'" aria-pressed="false">'+ORG[k][0].split(' (')[0]+'</button>').join('');
+  $$('#cellChips .chip').forEach(c=>c.addEventListener('click',()=>showOrg(c.dataset.k)));
+  $('#cellInfo').innerHTML='<h3>Tippe auf ein Organell</h3><p>Klicke im Bild oder auf einen der Namen darunter.</p>';
+}
+$$('[data-cell]').forEach(b=>b.addEventListener('click',()=>drawCell(b.dataset.cell)));
+drawCell('tier');
+
+/* ---------- Prokaryoten: Wachstum ---------- */
+function grow(){ const t=+$('#growSlider').value, k=t/20, n=Math.pow(2,k);
+  $('#growN').textContent=n.toLocaleString('de-AT');
+  $('#growT').textContent='nach '+t+' min · '+k+' Teilung'+(k===1?'':'en');
+  $('#growDots').innerHTML=n<=64?'<i></i>'.repeat(n):'';
+  $('#growNote').textContent=n>64?'Zu viele zum Zeichnen! Rechnung: 2 hoch '+k+' = '+n.toLocaleString('de-AT')+'. Nach 10 Stunden wären es schon über eine Milliarde.':'Jede Teilung verdoppelt die Zahl: 1 → 2 → 4 → 8 → 16 …';}
+$('#growSlider').addEventListener('input',grow); grow();
+
+/* ---------- Prokaryoten: Verwendung ---------- */
+const USES=[
+ ['Lebensmittel','Joghurt und Topfen','Milchsäurebakterien (z. B. Lactobacillus)','Wandeln Milchzucker in Milchsäure um. Die Milch wird sauer, dick und länger haltbar.'],
+ ['Lebensmittel','Sauerkraut und Salzgurken','Milchsäurebakterien','Milchsäuregärung im luftdicht verschlossenen Gefäß. Die Säure konserviert das Gemüse.'],
+ ['Lebensmittel','Emmentaler','Propionsäurebakterien','Bilden beim Reifen Kohlenstoffdioxid. Das Gas bildet die typischen Löcher.'],
+ ['Lebensmittel','Essig','Essigsäurebakterien (Acetobacter)','Wandeln mit Sauerstoff Alkohol aus Wein oder Most in Essigsäure um.'],
+ ['Medizin','Insulin','gentechnisch veränderte E. coli','Bekommen das menschliche Insulin-Gen auf einem Plasmid und stellen dann Insulin für Menschen mit Diabetes her.'],
+ ['Medizin','Antibiotika','Streptomyceten (Bodenbakterien)','Bilden Stoffe wie Streptomycin, die andere Bakterien hemmen. Daraus werden Medikamente.'],
+ ['Medizin','Darmflora','Billionen Darmbakterien','Helfen beim Verdauen, bilden Vitamin K und lassen Krankheitserregern keinen Platz.'],
+ ['Umwelt','Kläranlage','Bakterien im Belebungsbecken','Bauen organische Schmutzstoffe im Abwasser ab und reinigen es.'],
+ ['Umwelt','Biogas','Methanbildner (Archaeen)','Erzeugen ohne Sauerstoff aus Gülle und Bioabfall Methan – nutzbar als Energie.'],
+ ['Umwelt','Kompost und Stoffkreislauf','Destruenten (Zersetzer)','Zerlegen tote Lebewesen in Mineralstoffe, die Pflanzen wieder aufnehmen.'],
+ ['Landwirtschaft','Natürlicher Dünger','Knöllchenbakterien (Rhizobium)','Leben in Wurzelknöllchen von Bohnen, Erbsen und Klee und binden Stickstoff aus der Luft.'],
+ ['Landwirtschaft','Biologischer Pflanzenschutz','Bacillus thuringiensis','Bildet ein Eiweiß, das bestimmte Raupen tötet, für Menschen aber ungefährlich ist.']
+];
+function drawUses(f){ $$('#useFilter .chip').forEach(c=>c.setAttribute('aria-pressed',c.dataset.f===f?'true':'false'));
+  $('#uses').innerHTML=USES.filter(u=>f==='alle'||u[0]===f).map(u=>'<div class="use"><span class="mono">'+u[0]+'</span><h3>'+u[1]+'</h3><p class="who">'+u[2]+'</p><p>'+u[3]+'</p></div>').join(''); }
+$$('#useFilter .chip').forEach(c=>c.addEventListener('click',()=>drawUses(c.dataset.f))); drawUses('alle');
+
+/* ---------- Mitose-Zeichnungen ---------- */
+const CH=[{L:36,c:0},{L:36,c:1},{L:22,c:0},{L:22,c:1}];
+function xch(x,y,L,c,r){ const h=L/2; return '<g transform="translate('+x+','+y+') rotate('+(r||0)+')"><path class="ch c'+c+'" d="M-4,'+(-h)+' Q-1,0 -4,'+h+'"/><path class="ch c'+c+'" d="M4,'+(-h)+' Q1,0 4,'+h+'"/><circle class="cent" r="2.6"/></g>';}
+function vch(x,y,L,c,dir){ const a=L*0.35*dir, b=L*0.42; return '<path class="ch c'+c+'" d="M'+(x+a)+','+(y-b)+' L'+x+','+y+' L'+(x+a)+','+(y+b)+'"/>';}
+function squig(x,y,w,c){ let d='M'+x+','+y; for(let i=0;i<w;i+=8){d+=' q2,'+((i/8)%2?5:-5)+' 4,0 t4,0';} return '<path class="ch thin c'+c+'" d="'+d+'"/>';}
+function aster(x,y){ let s=''; for(let a=0;a<360;a+=45){const r=a*Math.PI/180; s+='<line class="fiber" x1="'+x+'" y1="'+y+'" x2="'+(x+Math.cos(r)*12).toFixed(1)+'" y2="'+(y+Math.sin(r)*12).toFixed(1)+'"/>';} return s+'<circle class="cent" cx="'+x+'" cy="'+y+'" r="3.5"/>';}
+const PH={
+interphase:()=>'<ellipse class="cellbody" cx="180" cy="120" rx="150" ry="100"/><circle class="nuc" cx="180" cy="120" r="58"/>'+squig(140,95,40,0)+squig(170,120,40,1)+squig(150,140,30,0)+squig(185,92,30,1)+'<circle class="nucleolus" cx="200" cy="140" r="9"/>'+aster(268,54),
+prophase:()=>'<ellipse class="cellbody" cx="180" cy="120" rx="150" ry="100"/><circle class="nucdash" cx="180" cy="120" r="58"/>'+xch(158,100,36,0,-25)+xch(204,98,36,1,25)+xch(162,146,22,0,15)+xch(202,142,22,1,-20)+aster(92,96)+aster(268,144)+'<line class="fiber" x1="104" y1="100" x2="256" y2="140"/><line class="fiber" x1="104" y1="92" x2="256" y2="132"/>',
+metaphase:()=>{let s='<ellipse class="cellbody" cx="180" cy="120" rx="150" ry="100"/><line class="eq" x1="180" y1="30" x2="180" y2="210"/>'+aster(48,120)+aster(312,120); const ys=[58,98,140,178]; CH.forEach((ch,i)=>{s+='<line class="fiber" x1="48" y1="120" x2="176" y2="'+ys[i]+'"/><line class="fiber" x1="312" y1="120" x2="184" y2="'+ys[i]+'"/>'+xch(180,ys[i],ch.L,ch.c,0);}); return s;},
+anaphase:()=>{let s='<ellipse class="cellbody" cx="180" cy="120" rx="155" ry="96"/>'+aster(40,120)+aster(320,120); const ys=[72,104,138,168]; CH.forEach((ch,i)=>{s+='<line class="fiber" x1="40" y1="120" x2="112" y2="'+ys[i]+'"/><line class="fiber" x1="320" y1="120" x2="248" y2="'+ys[i]+'"/>'+vch(112,ys[i],ch.L,ch.c,1)+vch(248,ys[i],ch.L,ch.c,-1);}); s+='<line class="fiber" x1="140" y1="120" x2="220" y2="120"/>'; return s;},
+telophase:()=>{let s='<path class="cellbody" d="M180,52 C110,0 22,52 26,120 C22,188 110,240 180,188 C250,240 338,188 334,120 C338,52 250,0 180,52 Z"/><circle class="nucdash" cx="100" cy="120" r="46"/><circle class="nucdash" cx="260" cy="120" r="46"/>'; const ys=[92,112,132,150]; CH.forEach((ch,i)=>{s+='<line class="ch thin c'+ch.c+'" x1="'+(88)+'" y1="'+ys[i]+'" x2="'+(88+ch.L*.7)+'" y2="'+(ys[i]+4)+'"/><line class="ch thin c'+ch.c+'" x1="'+(248)+'" y1="'+ys[i]+'" x2="'+(248+ch.L*.7)+'" y2="'+(ys[i]+4)+'"/>';}); return s;},
+cytokinese:()=>{let s='<ellipse class="cellbody" cx="92" cy="120" rx="84" ry="76"/><ellipse class="cellbody" cx="268" cy="120" rx="84" ry="76"/><circle class="nuc" cx="92" cy="120" r="38"/><circle class="nuc" cx="268" cy="120" r="38"/>'; [[70,0],[78,1]].forEach(()=>{}); s+=squig(70,104,30,0)+squig(76,118,30,1)+squig(70,132,22,0)+squig(84,142,20,1)+squig(246,104,30,0)+squig(252,118,30,1)+squig(246,132,22,0)+squig(260,142,20,1); return s;}
+};
+const PHASES=[
+ ['interphase','Interphase','Die Zelle arbeitet und wächst. Gegen Ende wird die DNA verdoppelt. Die Chromosomen liegen als lange, dünne Fäden (Chromatin) im Zellkern und sind einzeln nicht sichtbar. Streng genommen gehört die Interphase nicht zur Mitose – sie ist die Vorbereitung.','4 Chromosomen · DNA wird verdoppelt'],
+ ['prophase','Prophase','Die Chromosomen verdichten sich (spiralisieren) und werden sichtbar. Jedes besteht jetzt aus 2 Schwesterchromatiden, verbunden am Centromer. Die Kernhülle löst sich auf. Zwischen den Zellpolen bildet sich der Spindelapparat.','4 Chromosomen · je 2 Chromatiden'],
+ ['metaphase','Metaphase','Spindelfasern heften sich an die Centromere und ziehen die Chromosomen in die Mitte. Alle liegen in einer Ebene, der Äquatorialebene. Jetzt kann man sie am besten zählen.','4 Chromosomen in der Äquatorialebene'],
+ ['anaphase','Anaphase','Die Spindelfasern verkürzen sich und trennen die Schwesterchromatiden. Je eine Chromatide jedes Chromosoms wandert zum linken, die andere zum rechten Pol.','8 Chromatiden · 4 pro Pol'],
+ ['telophase','Telophase','An beiden Polen bildet sich eine neue Kernhülle. Die Chromosomen entspiralisieren sich wieder zu dünnen Fäden. Der Spindelapparat wird abgebaut, die Zelle schnürt sich ein.','2 Tochterkerne mit je 4 Chromosomen'],
+ ['cytokinese','Cytokinese','Das Zellplasma wird geteilt. Tierzellen schnüren sich durch, Pflanzenzellen bauen in der Mitte eine neue Zellwand. Ergebnis: 2 Tochterzellen mit identischer Erbinformation.','2 Zellen mit je 4 Chromosomen']
+];
+let ph=0;
+const svgWrap=inner=>'<svg viewBox="0 0 360 240" role="img" aria-label="Modellzelle">'+inner+'</svg>';
+$('#phaseBar').innerHTML=PHASES.map((p,i)=>'<button data-ph="'+i+'">'+p[1]+'</button>').join('');
+$$('#phaseBar button').forEach(b=>b.addEventListener('click',()=>{ph=+b.dataset.ph;drawPhase();}));
+function drawPhase(){ const p=PHASES[ph]; $('#phaseSvg').innerHTML=svgWrap(PH[p[0]]()); $('#phaseTitle').textContent=(ph+1)+'. '+p[1]; $('#phaseText').textContent=p[2]; $('#phaseCount').textContent=p[3];
+  $$('#phaseBar button').forEach((b,i)=>b.setAttribute('aria-current',i===ph?'true':'false')); $('#phPrev').disabled=ph===0; $('#phNext').disabled=ph===PHASES.length-1;}
+$('#phPrev').addEventListener('click',()=>{if(ph>0){ph--;drawPhase();}});
+$('#phNext').addEventListener('click',()=>{if(ph<PHASES.length-1){ph++;drawPhase();}});
+drawPhase();
+
+/* Phasen-Spiel */
+let gTarget=-1,gStreak=0;
+function newGuess(){ let t; do{t=Math.floor(Math.random()*PHASES.length);}while(t===gTarget); gTarget=t;
+  $('#guessSvg').innerHTML='<div class="panel">'+svgWrap(PH[PHASES[t][0]]())+'</div>'; $('#guessFb').textContent='';
+  const o=$('#guessOpts'); o.innerHTML='';
+  PHASES.forEach((p,i)=>{const b=document.createElement('button'); b.className='opt'; b.textContent=p[1];
+    b.addEventListener('click',()=>{ $$('#guessOpts .opt').forEach((bb,j)=>{bb.disabled=true; if(j===gTarget) bb.classList.add('right');});
+      if(i===gTarget){gStreak++; $('#guessFb').innerHTML='<strong style="color:var(--green)">Richtig!</strong> ';} else {gStreak=0; b.classList.add('wrong'); $('#guessFb').innerHTML='<strong style="color:var(--pink)">Das ist die '+PHASES[gTarget][1]+'.</strong> ';}
+      $('#guessScore').textContent=gStreak+' richtig in Folge';
+      const nx=document.createElement('button'); nx.className='btn'; nx.textContent='Nächste Zelle'; nx.style.marginLeft='6px'; nx.addEventListener('click',newGuess); $('#guessFb').appendChild(nx);});
+    o.appendChild(b);});}
+newGuess();
+
+/* ---------- Karteikarten ---------- */
+const FC=[
+ ['mikroskop','Gesamtvergrößerung','Vergrößerung Okular × Vergrößerung Objektiv. Beispiel: 10 × 40 = 400-fach.'],
+ ['mikroskop','Okular','Linse am Auge, durch die man schaut (meist 10×).'],
+ ['mikroskop','Objektiv','Linse nahe am Präparat (z. B. 4×, 10×, 40×). Beim Mikroskopieren immer mit dem kleinsten beginnen.'],
+ ['mikroskop','Grobtrieb und Feintrieb','Grobtrieb: grobes Scharfstellen bei kleiner Vergrößerung. Feintrieb: genaues Nachschärfen, bei starker Vergrößerung nur noch dieser.'],
+ ['mikroskop','Blende','Regelt die Lichtmenge. Weniger Licht = mehr Kontrast.'],
+ ['mikroskop','Nasspräparat','Objekt in einen Wassertropfen auf den Objektträger legen, Deckglas schräg auflegen, damit keine Luftblasen entstehen.'],
+ ['zelle','Zellkern','Enthält die DNA (Erbinformation) und steuert die Zelle. Nur bei Eukaryoten.'],
+ ['zelle','Mitochondrium','„Kraftwerk“: gewinnt durch Zellatmung Energie. In Tier- UND Pflanzenzellen.'],
+ ['zelle','Chloroplast','Ort der Fotosynthese, enthält Chlorophyll. Nur in Pflanzenzellen.'],
+ ['zelle','Ribosom','Stellt Proteine her. In allen Zellen, auch in Bakterien.'],
+ ['zelle','Zellmembran','Dünne Hülle jeder Zelle, regelt, welche Stoffe hinein- und hinausgelangen.'],
+ ['zelle','Zellwand','Feste Hülle außerhalb der Membran. Pflanzen: Cellulose. Bakterien: Murein. Tierzellen haben keine.'],
+ ['zelle','Zentralvakuole','Großer Speicher mit Zellsaft in Pflanzenzellen, hält die Zelle prall.'],
+ ['zelle','Golgi-Apparat','Verpackt Stoffe in Bläschen und verschickt sie („Post“).'],
+ ['zelle','Endoplasmatisches Retikulum','Membrannetz für den Stofftransport; raues ER trägt Ribosomen.'],
+ ['zelle','Eukaryot','Lebewesen, dessen Zellen einen Zellkern und Organellen haben: Tiere, Pflanzen, Pilze.'],
+ ['prokaryoten','Prokaryot','Zelle ohne Zellkern und ohne membranumhüllte Organellen: Bakterien und Archaeen.'],
+ ['prokaryoten','Nucleoid','Bereich im Bakterium, wo die ringförmige DNA frei im Cytoplasma liegt.'],
+ ['prokaryoten','Plasmid','Kleiner DNA-Ring im Bakterium. Werkzeug der Gentechnik, z. B. für Insulin.'],
+ ['prokaryoten','Zweiteilung','Vermehrung der Bakterien: DNA kopieren, wachsen, in der Mitte durchschnüren. Unter guten Bedingungen alle 20 min.'],
+ ['prokaryoten','Milchsäuregärung','Milchsäurebakterien wandeln ohne Sauerstoff Zucker in Milchsäure um – Joghurt, Topfen, Sauerkraut.'],
+ ['prokaryoten','Destruenten','Zersetzer (Bakterien, Pilze): bauen totes Material zu Mineralstoffen ab und schließen den Stoffkreislauf.'],
+ ['prokaryoten','Knöllchenbakterien','Binden Luftstickstoff in den Wurzeln von Hülsenfrüchtlern – natürlicher Dünger.'],
+ ['mitose','Mitose','Kernteilung, bei der zwei genetisch identische Tochterkerne entstehen. Für Wachstum, Erneuerung, Wundheilung.'],
+ ['mitose','Chromosom','Verpackte DNA. Nach der Verdopplung besteht es aus 2 Schwesterchromatiden (X-Form).'],
+ ['mitose','Centromer','Einschnürung, an der die Schwesterchromatiden zusammenhängen. Hier setzen die Spindelfasern an.'],
+ ['mitose','Spindelapparat','Fasern zwischen den Zellpolen, die die Chromatiden auseinanderziehen.'],
+ ['mitose','Interphase','Arbeits- und Wachstumsphase zwischen zwei Teilungen. Hier wird die DNA verdoppelt.'],
+ ['mitose','P – M – A – T','Prophase (packen), Metaphase (Mitte), Anaphase (auseinander), Telophase (Tochterkerne).'],
+ ['mitose','Cytokinese','Teilung des Zellplasmas nach der Mitose – es entstehen zwei Zellen.']
+];
+const TN={mikroskop:'Mikroskop',zelle:'Zelle',prokaryoten:'Prokaryoten',mitose:'Mitose'};
+let deck=[],cur=null,total=0;
+function fcBuild(){ const f=$('#fcFilter').value; deck=shuffle(FC.filter(c=>f==='alle'||c[0]===f)); total=deck.length; fcShow(); }
+function fcShow(){ $('#fc').classList.remove('flip'); cur=deck[0]||null;
+  if(!cur){ $('#fcTopic').textContent='Fertig'; $('#fcFront').textContent='Alle Karten gewusst!'; $('#fcBack').textContent='Mische den Stapel neu oder wähle ein anderes Thema.'; $('#fcKnown').disabled=true; $('#fcAgain').disabled=true; }
+  else { $('#fcTopic').textContent=TN[cur[0]]; $('#fcFront').textContent=cur[1]; $('#fcBack').textContent=cur[2]; $('#fcKnown').disabled=false; $('#fcAgain').disabled=false; }
+  $('#fcCount').textContent=(total-deck.length)+' von '+total+' gewusst'; }
+const flip=()=>{ if(cur) $('#fc').classList.toggle('flip'); };
+$('#fcInner').addEventListener('click',flip);
+$('#fcInner').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip();}});
+$('#fcKnown').addEventListener('click',()=>{deck.shift();fcShow();});
+$('#fcAgain').addEventListener('click',()=>{const c=deck.shift(); deck.push(c); fcShow();});
+$('#fcReset').addEventListener('click',fcBuild);
+$('#fcFilter').addEventListener('change',fcBuild);
+fcBuild();
+
+updateProgress();
+go((location.hash||'#start').slice(1),false);
+})();
+</script>
+
+</body>
+</html>
